@@ -1,17 +1,21 @@
 CVE-2026-35273 Tech Map and Write-up 
 Overview of the Cyber Incident
-Date of Breach: The attack occurred around September 21–22, 2026.
+Date of Breach: The attack occurred around 
+September 21–22, 2026.
 The Culprit: The international cybercrime collective known as ShinyHunters claimed responsibility.
 Target: The FBI's recruitment infrastructure, including FBIjobs.gov and the Special Agent Application Portal. 
 What Happened During the Attack
-Site Defacement: The hackers temporarily altered the jobs portal to display a message reading, "THIS SITE HAS BEEN SEIZED BY SHINYHUNTERS." 
+Site Defacement: The hackers temporarily altered the jobs portal to display a message reading, 
+"THIS SITE HAS BEEN SEIZED BY SHINYHUNTERS." 
 Portal Outage: The FBI took the recruitment and application systems offline following the unauthorized activity. 
 Data Theft Claims: ShinyHunters claimed to have stolen 2 to 3 terabytes of data containing personally identifiable information (PII) on roughly 38,000 current and former personnel, including almost all active FBI agents and job applicants. 
 Exposed Categories: The group alleged the stolen cache includes home addresses, phone numbers, spouse information, medical records, and specific work assignment details. 
 Motive and Response
-Motive: According to statements given by the hacking group to Reuters and other media, the attack was retaliation for a May 2026 public advisory issued by the FBI that detailed ShinyHunters' extortion methods and instructed targets not to pay ransoms. 
+Motive: According to statements given by the hacking group to Reuters and other media, the attack was retaliation for a May 2026 public advisory issued by the FBI that detailed ShinyHunters' 
+extortion methods and instructed targets not to pay ransoms. 
 Current Status: The FBI acknowledged that it is actively investigating unauthorized activity affecting FBIjobs.gov, though it has not fully verified the extent or authenticity of the complete data theft claims. 
-If you would like, I can provide more details on:
+If you would like, 
+I can provide more details on:
 ShinyHunters' past high-profile cyberattacks
 The specific cloud or software vulnerabilities reported in connection with this breach
 
@@ -20,15 +24,20 @@ The cyberattack on the FBI’s recruitment architecture utilized specific, sophi
 A breakdown of the specific software flaw, the cloud environment targeted, and the methodology used by ShinyHunters includes:
 1. The Core Software Vulnerability: Oracle PeopleSoft
 According to threat intelligence reports released by Google’s cybersecurity unit (Mandiant) and statements from the hackers, the primary entry point was an Oracle PeopleSoft Enterprise vulnerability. 
-Zero-Day Exploitation: The hackers capitalized on a newly identified or unpatched zero-day flaw in Oracle PeopleSoft. This software family is widely used by corporations and government agencies for large-scale human resources (HR) data processing, applicant tracking, and financial functions. 
-Remote Code Execution (RCE): The vulnerability allowed the unauthenticated attackers to execute unauthorized commands remotely over the network. This gave them an initial foothold on the public-facing jobs environment without needing legitimate login credentials.
-Bypassing Firewalls: Mandiant noted that ShinyHunters adapted their tactics to skirt past active Web Application Firewall (WAF) rules. They successfully targeted entities that had configured structural network defenses but had not yet successfully applied Oracle’s critical security patches.
-2. The Cloud Environment: AWS GovCloud
+Zero-Day Exploitation: The hackers capitalized on a newly identified or unpatched zero-day flaw in Oracle PeopleSoft.
+This software family is widely used by corporations and government agencies for large-scale human resources (HR) data processing, applicant tracking, and financial functions. 
+Remote Code Execution (RCE): The vulnerability allowed the unauthenticated attackers to execute unauthorized commands remotely over the network.
+This gave them an initial foothold on the public-facing jobs environment without needing legitimate login credentials.
+Bypassing Firewalls: Mandiant noted that ShinyHunters adapted their tactics to skirt past active Web Application Firewall (WAF) rules.
+They successfully targeted entities that had configured structural network defenses but had not yet successfully applied Oracle’s critical security patches.
+3. The Cloud Environment: AWS GovCloud
 The FBI’s recruitment and background screening infrastructure relies heavily on Amazon Web Services (AWS) GovCloud—an isolated cloud environment designed specifically for U.S. government agencies to host sensitive data and meet strict regulatory compliance. 
 Lateral Movement: Once ShinyHunters gained access through the PeopleSoft exploit on the web portal, they escalated their privileges within the network. 
-Cloud Infrastructure Traversal: This lateral movement allowed them to pivot away from the public web server and deep into the secure AWS GovCloud instances hosting the core applications. 
-3. Compromised Third-Party & Sub-Systems
-The FBI’s investigation has intensely focused on whether the "point of breach" was an entry point on an internal enterprise network or a vulnerability in a third-party software provider that manages the portal. By traversing the PeopleSoft and cloud configurations, the attackers claimed access to several specific applications, including: 
+Cloud Infrastructure Traversal,
+This lateral movement allowed them to pivot away from the public web server and deep into the secure AWS GovCloud instances hosting the core applications. 
+5. Compromised Third-Party & Sub-Systems
+The FBI’s investigation has intensely focused on whether the "point of breach" was an entry point on an internal enterprise network or a vulnerability in a third-party software provider that manages the portal.
+By traversing the PeopleSoft and cloud configurations, the attackers claimed access to several specific applications, including: 
 FBI Jobs & HR Systems: The database holding personnel records and agent job histories.
 FBI BEAST: The sub-system tasked with conducting background checks on both prospective and current employees.
 FBI MedLink: A specialized internal health platform housing highly confidential medical evaluations, psychiatric files, and agent drug-testing records.
@@ -38,7 +47,8 @@ The technical lifecycle of the Oracle PeopleSoft exploit (CVE-2026-35273) used b
 2. Operational Breakdown of the Lifecycle
 Phase 1: Web Application Firewall (WAF) Bypass
 Security guidance published after prior campaigns instructed organizations to block the literal text string path /PSEMHUB/ 
-(the vulnerable Environment Management Hub servlet). To bypass this, ShinyHunters modified their exploit to send URL-encoded strings (specifically substituting %50 for P). Standard string-matching firewalls passed the path /%50SEMHUB/ through as safe, while the backend application server decoded it back into the vulnerable servlet.
+(the vulnerable Environment Management Hub servlet).
+To bypass this, ShinyHunters modified their exploit to send URL-encoded strings (specifically substituting %50 for P). Standard string-matching firewalls passed the path /%50SEMHUB/ through as safe, while the backend application server decoded it back into the vulnerable servlet.
 
 Phase 2: Unauthenticated Remote Code Execution (RCE)
 The payload targeted a critical structural flaw within Oracle PeopleSoft’s Environment Management framework, carrying a maximum severity CVSS score of 9.8. 
